@@ -999,6 +999,11 @@ type prop =
     /// For example used by the server to identify the fields in form submits.
     static member inline name (value: string) = Interop.mkAttr "name" value
 
+    /// Includes static nested elements
+    static member inline nested (elems: Fable.React.ReactElement seq) = 
+      Interop.mkAttr "nested" (Interop.reactApi.Children.toArray (Array.ofSeq elems))
+
+
     /// This Boolean attribute is set to indicate that the script should not be executed in
     /// browsers that support ES2015 modules — in effect, this can be used to serve fallback
     /// scripts to older browsers that do not support modular JavaScript code.

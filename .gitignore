@@ -209,5 +209,6 @@ dist
 # JetBrains Rider
 .idea
 *.fs.js
+*.fs.js.map
 0.bundle.js
 .yarn
