@@ -5,6 +5,7 @@ open Fable.Core.JsInterop
 open Fable.React
 open Feliz.ReactApi
 
+
 let reactApi : IReactApi = importDefault "react"
 #if FABLE_COMPILER_3 || FABLE_COMPILER_4
 let inline reactElement (name: string) (props: 'a) : ReactElement = import "createElement" "react"
@@ -29,13 +30,15 @@ let inline reactElementWithChildren (name: string) (children: #seq<ReactElement>
     // printfn "reactElementWithChildren: %A" children
     reactElement name  (createObj [ "children" ==> reactApi.Children.toArray (Array.ofSeq children) ])
 
+[<Emit "console.log($0,$1)">]
+let inline log (x: obj) : unit = jsNative
 let inline createElement name (properties: IReactProperty list) : ReactElement =
     // printfn "createElement: %A" properties
     let obj : (string * obj) list = !!properties
-    let nested = obj |> List.tryFind (fun (k, v) -> k = "nested")
+    let nested = obj |> List.tryPick (function ("nested", v) -> Some v | _ -> None) |> Option.defaultValue []
     let others = obj |> List.filter (fun (k, v) -> k <> "nested")
     let props = createObj others
-    reactElementApply name props !!others
+    reactElementApply name props !!nested
 let inline createSvgElement name (properties: ISvgAttribute list) : ReactElement =
     reactElement name (createObj !!properties)
 
