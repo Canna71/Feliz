@@ -7,14 +7,19 @@ open Feliz.ReactApi
 
 
 let reactApi : IReactApi = importDefault "react"
+
 #if FABLE_COMPILER_3 || FABLE_COMPILER_4
 let inline reactElement (name: string) (props: 'a) : ReactElement = import "createElement" "react"
-[<Emit "createElement.apply(null, [$0, $1, ...$2])">]
-let inline reactElementApply (name: string) (props: 'a) (nested: #seq<ReactElement>) : ReactElement = jsNative
+
+[<Import("createElement", "react")>]
+[<Emit "$0.apply(null, [$1, $2, ...$3])">]
+let inline reactElementApply (name: string) (props: 'a) (nested: #seq<ReactElement>) : ReactElement = jsNative 
 
 #else
 let reactElement (name: string) (props: 'a) : ReactElement = import "createElement" "react"
-[<Emit "createElement.apply(null, [$0, $1, ...$2])">]
+
+[<Import("createElement", "react")>]
+[<Emit "$0.apply(null, [$1, $2, ...$3])">]
 let inline reactElementApply (name: string) (props: 'a) (nested: #seq<ReactElement>) : ReactElement = jsNative
 
 #endif
